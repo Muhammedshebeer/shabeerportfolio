@@ -346,24 +346,22 @@
 
 
 
-            <form action="" method="POST" class="contact-form col-md-10 col-lg-8 m-auto">
+            <form id="contactForm" class="contact-form col-md-10 col-lg-8 m-auto">
                 <div class="form-row">
                     <div class="form-group col-sm-6">
-                        <input type="text" size="50" class="form-control" placeholder="Your Name" name="name" required>
+                        <input type="text" class="form-control" placeholder="Your Name" name="name" required>
                     </div>
                     <div class="form-group col-sm-6">
                         <input type="email" class="form-control" placeholder="Enter Email" name="email" required>
                     </div>
-                   
                     <div class="form-group col-sm-12">
-                        <textarea id="comment" rows="6" class="form-control" placeholder="Write Something"
-                            name="description"></textarea>
+                        <textarea rows="6" class="form-control" placeholder="Write Something" name="message"
+                            required></textarea>
                     </div>
                     <div class="form-group col-sm-12 mt-3">
-                        <input type="submit" value="Send Message" class="btn btn-outline-primary rounded">
+                        <button type="submit" class="btn btn-outline-primary rounded">Send Message</button>
                     </div>
                 </div>
-
             </form>
 
         </div><!-- end of container -->
@@ -392,6 +390,51 @@
             </div>
         </footer>
     </div> <!-- end of page footer -->
+
+    <!-- ##function for form submission -->
+
+    
+        <!-- script for  email push and google form -->
+    <script>
+           // Load .env file using fetch
+           async function loadEnv() {
+            const response = await fetch('./.env');
+            const text = await response.text();
+            const env = {};
+            text.split('\n').forEach(line => {
+                const [key, value] = line.split('=');
+                if (key && value) env[key.trim()] = value.trim();
+            });
+            return env;
+        }
+
+
+        document.getElementById('contactForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const env = await loadEnv();
+
+            // Prepare form data
+            const formData = new FormData(e.target);
+
+            // Replace with your Google Apps Script URL
+            const scriptURL ='https://script.google.com/macros/s/AKfycbx-6vVI14hGRNzHwxRkY6OLS0p2lHOezLtodLynPaL74UtOl_gu5XVLMzZZTObd9SMX/exec';
+
+
+            // Submit data to Google Apps Script
+            fetch(scriptURL, {
+                method: 'POST',
+                body: formData,
+            })
+                .then((response) => {
+                    alert('Form submitted successfully!');
+                })
+                .catch((error) => {
+                    alert('Error submitting the form.');
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+    
 
     <!-- core  -->
     <script src="vendors/jquery/jquery-3.4.1.js"></script>
